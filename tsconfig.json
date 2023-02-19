@@ -1,0 +1,16 @@
+{
+    "include": [
+        "src/**/*.ts"
+    ],
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "module": "CommonJS",
+        "outDir": "dist",
+        "target": "ES2018",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "declaration": true,
+    },
+}
