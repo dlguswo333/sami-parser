@@ -3,14 +3,16 @@
         "src/**/*.ts"
     ],
     "compilerOptions": {
-        "strictNullChecks": true,
         "module": "CommonJS",
-        "outDir": "dist",
+        "outDir": "dist/cjs",
+        "strictNullChecks": true,
         "target": "ES2018",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "moduleResolution": "node",
         "sourceMap": true,
         "declaration": true,
+        "declarationDir": "dist/types",
+        "removeComments": true,
     },
 }
