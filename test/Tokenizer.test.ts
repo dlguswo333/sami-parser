@@ -29,6 +29,19 @@ describe('Test basic tokenizer features', () => {
     assert.deepStrictEqual(result.tagType, 'P');
     assert.deepStrictEqual(result.properties['Class'], 'FRFRCC');
     assert.deepStrictEqual(result.properties['ID'], 'Source');
+
+    result = tokenizer.parseStartTagContent('FONT color="#3f3f3f"');
+    assert.deepStrictEqual(result.tagType, 'FONT');
+    assert.deepStrictEqual(result.properties['color'], '#3f3f3f');
+
+    result = tokenizer.parseStartTagContent('FONT color=#ffffff');
+    assert.deepStrictEqual(result.tagType, 'FONT');
+    assert.deepStrictEqual(result.properties['color'], '#ffffff');
+
+    // TODO: Fix unwanted type conversion: '000000' to 0
+    // result = tokenizer.parseStartTagContent('FONT color=000000');
+    // assert.deepStrictEqual(result.tagType, 'FONT');
+    // assert.deepStrictEqual(result.properties['color'], '000000');
   });
 
   it('Parse end tag', () => {
