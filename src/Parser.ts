@@ -41,12 +41,14 @@ class Parser {
           if (this.stack.length > 0) {
             throw new Error('Parse error: The root node is not SAMI.');
           }
-        } else if (this.doesTagExistInStack(token.tagType.toUpperCase())) {
-          // A node with the same tag type exists in the parent stack.
+        } else if (this.doesTagExistInStack(token.tagType.toUpperCase()) &&
+          (/^SYNC$/i.test(token.tagType) || /^P$/i.test(token.tagType))) {
+          // A node with the same tag type exists in the parent stack,
+          // but they are not actually one inside another structure.
           // This is because SAMI blocks may terminate implicitly without a closing tag.
+          // Some tags cannot be nested e.g. SYNC, P.
           // Therefore, return to the parent.
-          // This strategy is built on that there may be no duplicated nested blocks in SAMI.
-          // i.e. SYNC > SYNC structure is not permitted.
+          // However, there are some exceptions such as 'font' tags.
           this.stack.pop();
           return;
         } else if (!this.doesTagExistInStack('SAMI')) {
