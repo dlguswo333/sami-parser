@@ -70,13 +70,13 @@ class Parser {
         ++this.cursor;
         this._parse(curNode);
       } else if (token instanceof EndTagToken) {
-        if (!/^SYNC$/i.test(token.tagType) && this.doesTagExistInStack('SYNC')) {
+        if (!this.doesTagExistInStack(token.tagType.toUpperCase())) {
+          throw new Error(`Parse error: Close tag detected that was never open: '${token.tagType}'`);
+        }
+        if (parentNode.tagType !== token.tagType.toUpperCase()) {
           // Return to the parent node.
           this.stack.pop();
           return;
-        }
-        if (parentNode.tagType !== token.tagType.toUpperCase()) {
-          throw new Error(`Parse error: Close tag detected that was never open: '${token.tagType}'`);
         }
         // Return to the parent.
         ++this.cursor;
