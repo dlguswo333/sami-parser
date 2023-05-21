@@ -10,6 +10,8 @@ export type Node = {
 
 export type NodeSpecifier = 'BracketNode' | 'ContentNode' | 'CommentNode' | 'CurlyNode' | 'RootNode';
 
+const voidTags = ['BR'];
+
 class Parser {
   private tokens: Token[];
   private cursor: number;
@@ -30,6 +32,10 @@ class Parser {
 
   private doesTagExistInStack (tagType: string) {
     return this.stack.some((tag) => tag === tagType);
+  }
+
+  private isVoidTag (token: StartTagToken) {
+    return voidTags.includes(token.tagType.toUpperCase());
   }
 
   private _parse (parentNode: Node) {
@@ -65,10 +71,12 @@ class Parser {
           children: [],
           properties: token.properties,
         };
-        this.pushTokenToStack(token);
         parentNode.children.push(curNode);
         ++this.cursor;
-        this._parse(curNode);
+        if (!this.isVoidTag(token)) {
+          this.pushTokenToStack(token);
+          this._parse(curNode);
+        }
       } else if (token instanceof EndTagToken) {
         if (!this.doesTagExistInStack(token.tagType.toUpperCase())) {
           throw new Error(`Parse error: Close tag detected that was never open: '${token.tagType}'`);
