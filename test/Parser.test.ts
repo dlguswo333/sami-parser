@@ -88,6 +88,10 @@ describe('Test basic parser features', () => {
       </Body>
     </SAMI>
     `);
-    assert.doesNotThrow(() => parser.parse(tokens));
+    const parseResult = parser.parse(tokens);
+    const bodyTag = parseResult.children.find(node => node.tagType === 'SAMI')?.children.find(node => node.tagType === 'BODY');
+    assert.strictEqual(!!bodyTag, true);
+    const isEveryChildOfBodySyncTag = bodyTag?.children.every(node => node.tagType === 'SYNC');
+    assert.strictEqual(isEveryChildOfBodySyncTag, true);
   });
 });
