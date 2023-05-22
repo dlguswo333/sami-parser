@@ -2,12 +2,21 @@
   "name": "sami-parser",
   "version": "1.0.0",
   "description": "sami parser in javascript from scratch.",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "private": "false",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    }
+  },
   "scripts": {
-    "test": "mocha -r ts-node/register ./test/**/*",
-    "build": "tsc --build",
+    "test": "mocha -r ts-node/register ./test/*.test.ts",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
     "lint": "eslint src/**/*"
   },
   "keywords": [
