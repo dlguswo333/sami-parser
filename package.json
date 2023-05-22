@@ -1,6 +1,6 @@
 {
   "name": "sami-parser",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "sami parser in javascript from scratch.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
