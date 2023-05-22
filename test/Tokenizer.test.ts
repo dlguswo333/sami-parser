@@ -38,6 +38,10 @@ describe('Test basic tokenizer features', () => {
     assert.deepStrictEqual(result.tagType, 'FONT');
     assert.deepStrictEqual(result.properties['color'], '#ffffff');
 
+    result = tokenizer.parseStartTagContent('FONT color = #ffffff');
+    assert.deepStrictEqual(result.tagType, 'FONT');
+    assert.deepStrictEqual(result.properties['color'], '#ffffff');
+
     // TODO: Fix unwanted type conversion: '000000' to 0
     // result = tokenizer.parseStartTagContent('FONT color=000000');
     // assert.deepStrictEqual(result.tagType, 'FONT');

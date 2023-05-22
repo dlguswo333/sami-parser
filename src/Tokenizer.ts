@@ -119,8 +119,8 @@ class Tokenizer {
 
   public parseStartTagContent (content: string) {
     content = content.trim();
-    const wholeRegex = /^(\w+)((?:[\s]+(?:\w+=(?:"?[^"=]*"?|\S+)))*)$/;
-    const propertyRegex = /(\w+)=("[^"]*"|\S+)/g;
+    const wholeRegex = /^(\w+)((?:[\s]+(?:\w+\s?=\s?(?:"?[^"=]*"?|\S+)))*)$/;
+    const propertyRegex = /(\w+)\s?=\s?("[^"]*"|\S+)/g;
     const result = wholeRegex.exec(content);
     if (result === null) {
       throw new Error('Invalid Tag Error: ' + content);
