@@ -146,6 +146,7 @@ class Parser {
     for (const key of Object.keys(this.rules)) {
       this.rules[key] = false;
     }
+    this.stack = [];
     this._parse(this.tree);
     if (!this.tree.children.some((node) => node.nodeType === 'BracketNode' && node.tagType === 'SAMI')) {
       throw new Error('Could not parse tokens: Cannot find the root of SAMI.');
