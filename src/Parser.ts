@@ -64,11 +64,12 @@ class Parser {
           this.stack.pop();
           return;
         } else if (!this.doesTagExistInStack('SAMI')) {
-          // Outside of the SAMI node.
-          throw new Error(`Parse error: '${token.tagType}' node is outside of SAMI tag.`);
+          // Outside of the SAMI tag.
+          throw new Error(`Parse error: '${token.tagType}' tag is outside of SAMI tag.`);
         } else if (regexes.SYNC.test(token.tagType)) {
           if (!this.doesTagExistInStack('BODY')) {
-            throw new Error('Parse error: the parent node of SYNC tag is not BODY.');
+            // Outside of the BODY tag.
+            throw new Error('Parse error: SYNC tag is outside of the BODY tag.');
           }
         }
         curNode = {
