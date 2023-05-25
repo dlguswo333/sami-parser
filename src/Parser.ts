@@ -9,6 +9,7 @@ export type Node = {
 }
 
 export type NodeSpecifier = 'BracketNode' | 'ContentNode' | 'CommentNode' | 'CurlyNode' | 'RootNode';
+export type ParseResult = Node;
 
 const voidTags = ['BR'];
 
@@ -121,7 +122,7 @@ class Parser {
     }
   }
 
-  public parse (tokens: Token[]): Node {
+  public parse (tokens: Token[]): ParseResult {
     this.tokens = tokens;
     this.cursor = 0;
     // Virtual root node. Needed to permit comment nodes outside of SAMI node.
