@@ -12,6 +12,11 @@ export type NodeSpecifier = 'BracketNode' | 'ContentNode' | 'CommentNode' | 'Cur
 export type ParseResult = Node;
 
 const voidTags = ['BR'];
+const regexes = {
+  SAMI: /^SAMI$/i,
+  SYNC: /^SYNC$/i,
+  P: /^P$/i,
+};
 
 class Parser {
   private tokens: Token[];
@@ -44,24 +49,24 @@ class Parser {
     while (this.cursor < this.tokens.length) {
       const token = this.tokens[this.cursor];
       if (token instanceof StartTagToken) {
-        if (/^SAMI$/i.test(token.tagType)) {
+        if (regexes.SAMI.test(token.tagType)) {
           if (this.stack.length > 0) {
             throw new Error('Parse error: The root node is not SAMI.');
           }
         } else if (this.doesTagExistInStack(token.tagType.toUpperCase()) &&
-          (/^SYNC$/i.test(token.tagType) || /^P$/i.test(token.tagType))) {
+          (regexes.SYNC.test(token.tagType) || regexes.P.test(token.tagType))) {
           // A node with the same tag type exists in the parent stack,
           // but they are not actually one inside another structure.
           // This is because SAMI blocks may terminate implicitly without a closing tag.
-          // Some tags cannot be nested e.g. SYNC, P.
-          // Therefore, return to the parent.
-          // However, there are some exceptions such as 'font' tags.
+          // Such tags are SYNC, P.
+          // However, there are more tags that can be nested such as 'font' tags.
+          // Thus test if the tag is 'cannot be nested' tag and return to the parent.
           this.stack.pop();
           return;
         } else if (!this.doesTagExistInStack('SAMI')) {
           // Outside of the SAMI node.
           throw new Error(`Parse error: '${token.tagType}' node is outside of SAMI tag.`);
-        } else if (/^SYNC$/i.test(token.tagType)) {
+        } else if (regexes.SYNC.test(token.tagType)) {
           if (!this.doesTagExistInStack('BODY')) {
             throw new Error('Parse error: the parent node of SYNC tag is not BODY.');
           }
