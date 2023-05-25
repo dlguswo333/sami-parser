@@ -23,6 +23,20 @@ describe('Test basic parser features', () => {
     assert.throws(() => parser.parse(tokens));
   });
 
+  it('Throw if more than one BODY node exist', () => {
+    const tokens = tokenizer.tokenize(`
+      <SAMI>
+        <BODY>
+          <SYNC start=0>Body tag 1
+        </BODY>
+        <BODY>
+          <SYNC start=0>Body tag 2
+        </BODY>
+      </SAMI>
+    `);
+    assert.throws(() => parser.parse(tokens));
+  });
+
   it('Parse a few tags', () => {
     const tokens = tokenizer.tokenize(`
     <SAMI>

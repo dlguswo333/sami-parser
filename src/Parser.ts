@@ -23,11 +23,16 @@ class Parser {
   private cursor: number;
   /** Result of parsing. */
   private tree: Node;
+  /** Used to record whether certain SAMI rules are met. */
+  private rules = {
+    bodyTagAppeared: false,
+  };
   /**
    * Stack of current tag. Used to check grammar.
    * Push upper case letters only for convenience.
    */
   private stack: string[];
+
   constructor () {
     this.stack = [];
   }
@@ -53,6 +58,11 @@ class Parser {
           if (this.stack.length > 0) {
             throw new Error('Parse error: The root node is not SAMI.');
           }
+        } else if (token.tagType === 'BODY') {
+          if (this.rules.bodyTagAppeared) {
+            throw new Error('Parse error: More than one BODY tag inside SAMI.');
+          }
+          this.rules.bodyTagAppeared = true;
         } else if (this.doesTagExistInStack(token.tagType.toUpperCase()) &&
           (regexes.SYNC.test(token.tagType) || regexes.P.test(token.tagType))) {
           // A node with the same tag type exists in the parent stack,
@@ -131,8 +141,11 @@ class Parser {
   public parse (tokens: Token[]): ParseResult {
     this.tokens = tokens;
     this.cursor = 0;
-    // Virtual root node. Needed to permit comment nodes outside of SAMI node.
+    // Virtual root node. Needed to keep track of comment nodes outside of SAMI node.
     this.tree = {nodeType: 'RootNode', children: []};
+    for (const key of Object.keys(this.rules)) {
+      this.rules[key] = false;
+    }
     this._parse(this.tree);
     if (!this.tree.children.some((node) => node.nodeType === 'BracketNode' && node.tagType === 'SAMI')) {
       throw new Error('Could not parse tokens: Cannot find the root of SAMI.');
