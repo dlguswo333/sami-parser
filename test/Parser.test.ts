@@ -103,7 +103,7 @@ describe('Test basic parser features', () => {
     </SAMI>
     `);
     const parseResult = parser.parse(tokens);
-    const bodyTag = parseResult.children.find(node => node.tagType === 'SAMI')?.children.find(node => node.tagType === 'BODY');
+    const bodyTag = parseResult.body;
     assert.strictEqual(!!bodyTag, true);
     const isEveryChildOfBodySyncTag = bodyTag?.children.every(node => node.tagType === 'SYNC');
     assert.strictEqual(isEveryChildOfBodySyncTag, true);

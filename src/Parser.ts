@@ -9,7 +9,10 @@ export type Node = {
 }
 
 export type NodeSpecifier = 'BracketNode' | 'ContentNode' | 'CommentNode' | 'CurlyNode' | 'RootNode';
-export type ParseResult = Node;
+export type ParseResult = {
+  root: Node;
+  body: Node;
+};
 
 const voidTags = ['BR'];
 const regexes = {
@@ -23,6 +26,8 @@ class Parser {
   private cursor: number;
   /** Result of parsing. */
   private tree: Node;
+  /** Result body node. */
+  private bodyNode: Node;
   /** Used to record whether certain SAMI rules are met. */
   private rules = {
     bodyTagAppeared: false,
@@ -90,6 +95,9 @@ class Parser {
         };
         parentNode.children.push(curNode);
         ++this.cursor;
+        if (token.tagType === 'BODY') {
+          this.bodyNode = curNode;
+        }
         if (!this.isVoidTag(token)) {
           this.pushTokenToStack(token);
           this._parse(curNode);
@@ -151,7 +159,10 @@ class Parser {
     if (!this.tree.children.some((node) => node.nodeType === 'BracketNode' && node.tagType === 'SAMI')) {
       throw new Error('Could not parse tokens: Cannot find the root of SAMI.');
     }
-    return this.tree;
+    return {
+      root: this.tree,
+      body: this.bodyNode,
+    };
   }
 }
 
