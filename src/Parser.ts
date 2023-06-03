@@ -2,6 +2,7 @@ import {CommentToken, ContentToken, CurlyToken, EndTagToken, Properties, StartTa
 
 export type Node = {
   nodeType: NodeSpecifier;
+  /** tag type in upper case (e.g. 'SYNC') */
   tagType?: string;
   children: Node[];
   content?: string;

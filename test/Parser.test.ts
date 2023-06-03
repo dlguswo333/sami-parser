@@ -105,6 +105,8 @@ describe('Test basic parser features', () => {
     const parseResult = parser.parse(tokens);
     const bodyTag = parseResult.body;
     assert.strictEqual(!!bodyTag, true);
+    assert.strictEqual(bodyTag.tagType, 'BODY');
+    assert.strictEqual(bodyTag.nodeType === 'BracketNode', true);
     const isEveryChildOfBodySyncTag = bodyTag?.children.every(node => node.tagType === 'SYNC');
     assert.strictEqual(isEveryChildOfBodySyncTag, true);
   });
