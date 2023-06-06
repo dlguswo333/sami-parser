@@ -1,4 +1,4 @@
-import {CommentToken, ContentToken, CurlyToken, EndTagToken, Properties, StartTagToken, Token} from './Tokenizer';
+import Tokenizer, {CommentToken, ContentToken, CurlyToken, EndTagToken, Properties, StartTagToken, Token} from './Tokenizer';
 
 export type Node = {
   nodeType: NodeSpecifier;
@@ -147,8 +147,12 @@ class Parser {
     }
   }
 
-  public parse (tokens: Token[]): ParseResult {
-    this.tokens = tokens;
+  public parse (param: string | Token[]): ParseResult {
+    if (typeof param === 'string') {
+      this.tokens = new Tokenizer().tokenize(param);
+    } else {
+      this.tokens = param;
+    }
     this.cursor = 0;
     // Virtual root node. Needed to keep track of comment nodes outside of SAMI node.
     this.tree = {nodeType: 'RootNode', children: []};
