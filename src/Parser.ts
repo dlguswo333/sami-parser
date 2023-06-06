@@ -28,7 +28,7 @@ class Parser {
   /** Result of parsing. */
   private tree: Node;
   /** Result body node. */
-  private bodyNode: Node;
+  private bodyNode: Node | undefined;
   /** Used to record whether certain SAMI rules are met. */
   private rules = {
     bodyTagAppeared: false,
@@ -156,13 +156,17 @@ class Parser {
     this.cursor = 0;
     // Virtual root node. Needed to keep track of comment nodes outside of SAMI node.
     this.tree = {nodeType: 'RootNode', children: []};
+    this.bodyNode = undefined;
     for (const key of Object.keys(this.rules)) {
       this.rules[key] = false;
     }
     this.stack = [];
     this._parse(this.tree);
     if (!this.tree.children.some((node) => node.nodeType === 'BracketNode' && node.tagType === 'SAMI')) {
-      throw new Error('Could not parse tokens: Cannot find the root of SAMI.');
+      throw new Error('Parse error: Could not parse tokens: Cannot find the root of SAMI.');
+    }
+    if (!this.bodyNode) {
+      throw new Error('Parse error: Could not find BODY tag.');
     }
     return {
       root: this.tree,
