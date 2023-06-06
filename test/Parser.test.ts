@@ -110,4 +110,23 @@ describe('Test basic parser features', () => {
     const isEveryChildOfBodySyncTag = bodyTag?.children.every(node => node.tagType === 'SYNC');
     assert.strictEqual(isEveryChildOfBodySyncTag, true);
   });
+
+  it('Parse a SAMI string', () => {
+    const parseResult = parser.parse(`
+      <!-- This comment is not the root of throws -->
+      <SAMI>
+      <Title>Title of SAMI</Title>
+        <Body>
+          <SYNC START=1000>Hello</SYNC>
+          <SYNC START=2000>World</SYNC>
+        </Body>
+      </SAMI>
+    `);
+    assert.strictEqual(!!parseResult.root, true);
+    assert.strictEqual(!!parseResult.body, true);
+    assert.strictEqual(parseResult.body.children.length, 2);
+    assert.strictEqual(parseResult.body.children[0].properties && parseResult.body.children[0].properties['START'] === 1000, true);
+    assert.strictEqual(parseResult.body.children[1].properties && parseResult.body.children[1].properties['START'] === 2000, true);
+
+  });
 });
