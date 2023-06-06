@@ -1,5 +1,5 @@
 {
-  "name": "sami-parser",
+  "name": "@dlguswo333/sami-parser",
   "version": "0.0.1",
   "description": "sami parser in javascript from scratch.",
   "main": "dist/cjs/index.js",
@@ -17,7 +17,8 @@
     "build": "npm run build:cjs && npm run build:esm",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
-    "lint": "eslint src/**/*"
+    "lint": "eslint src/**/*",
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "sami",
