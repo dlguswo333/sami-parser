@@ -96,7 +96,7 @@ class Parser {
         };
         parentNode.children.push(curNode);
         ++this.cursor;
-        if (token.tagType === 'BODY') {
+        if (curNode.tagType === 'BODY') {
           this.bodyNode = curNode;
         }
         if (!this.isVoidTag(token)) {
